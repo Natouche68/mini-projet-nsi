@@ -6,10 +6,13 @@ window.geometry("800x500")
 
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
+arrows_coordinates = []
 
 
 def home():
     def start():
+        for _ in range(arrow_number.get()):
+            arrows_coordinates.append([])
         home_frame.destroy()
         overview()
 
@@ -31,6 +34,10 @@ def home():
 
 
 def overview():
+    def open_target(i):
+        overview_frame.destroy()
+        add_arrow(i)
+
     def small_target(i):
         canvas = tk.Canvas(target_frame, width=100, height=100)
         canvas.grid(row=i//3, column=i % 3, padx=10, pady=10)
@@ -48,7 +55,11 @@ def overview():
             canvas.create_oval(30, 30, 70, 70, fill="red")
             canvas.create_oval(40, 40, 60, 60, fill="yellow")
 
-        canvas.bind("<Button-1>", lambda event: print(i))
+        for x, y in arrows_coordinates[i]:
+            canvas.create_oval(x-2, y-2, x+2, y+2,
+                               fill="green", outline="green")
+
+        canvas.bind("<Button-1>", lambda _: open_target(i))
 
     overview_frame = tk.Frame(window)
     overview_frame.pack()
@@ -61,6 +72,45 @@ def overview():
     target_frame.pack()
     for i in range(arrow_number.get()):
         small_target(i)
+
+
+def add_arrow(target_number):
+    def on_click(event):
+        arrows_coordinates[target_number].append((event.x/4, event.y/4))
+        arrow_frame.destroy()
+        overview()
+
+    arrow_frame = tk.Frame(window)
+    arrow_frame.pack()
+
+    canvas = tk.Canvas(arrow_frame, width=400, height=400)
+    canvas.pack(padx=10, pady=10)
+
+    if is_trispot.get():
+        canvas.create_oval(2, 2, 398, 398, fill="blue")
+        canvas.create_oval(42, 42, 358, 358, fill="red")
+        canvas.create_oval(80, 80, 320, 320, fill="red")
+        canvas.create_oval(120, 120, 280, 280, fill="yellow")
+        canvas.create_oval(160, 160, 240, 240, fill="yellow")
+        canvas.create_oval(180, 180, 220, 220, fill="yellow")
+    else:
+        canvas.create_oval(2, 2, 398, 398, fill="white")
+        canvas.create_oval(21, 21, 379, 379, fill="white")
+        canvas.create_oval(40, 40, 360, 360, fill="black")
+        canvas.create_oval(60, 60, 340, 340, fill="black", outline="white")
+        canvas.create_oval(80, 80, 320, 320, fill="blue")
+        canvas.create_oval(100, 100, 300, 300, fill="blue")
+        canvas.create_oval(120, 120, 280, 280, fill="red")
+        canvas.create_oval(140, 140, 260, 260, fill="red")
+        canvas.create_oval(160, 160, 240, 240, fill="yellow")
+        canvas.create_oval(180, 180, 220, 220, fill="yellow")
+        canvas.create_oval(190, 190, 210, 210, fill="yellow")
+
+    for x, y in arrows_coordinates[target_number]:
+        canvas.create_oval(x*4-5, y*4-5, x*4+5, y*4+5,
+                           fill="green", outline="green")
+
+    canvas.bind("<Button-1>", on_click)
 
 
 home()
