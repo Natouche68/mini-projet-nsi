@@ -69,6 +69,10 @@ def overview():
 
         canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
+    def on_finish_click():
+        overview_frame.destroy()
+        stats()
+
     overview_frame = ttk.Frame(window)
     overview_frame.pack()
 
@@ -84,6 +88,10 @@ def overview():
     target_frame.pack()
     for i in range(arrow_number.get()):
         small_target(i)
+
+    finish_button = ttk.Button(
+        overview_frame, text="Terminer", command=on_finish_click)
+    finish_button.pack()
 
 
 def add_impact(target_number):
@@ -133,6 +141,10 @@ def add_impact(target_number):
                            fill="green", outline="green")
 
     canvas.bind("<Button-1>", on_click)
+
+
+def stats():
+    print(arrows_coordinates)
 
 
 home()
