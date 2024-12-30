@@ -7,6 +7,7 @@ window.geometry("800x500")
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
+current_volley = 1
 
 
 def home():
@@ -34,13 +35,15 @@ def home():
 
 
 def overview():
-    def open_target(i):
-        overview_frame.destroy()
-        add_arrow(i)
+    def open_target(target_number):
+        if len(arrows_coordinates[target_number]) < current_volley:
+            overview_frame.destroy()
+            add_impact(target_number)
 
-    def small_target(i):
+    def small_target(target_number):
         canvas = tk.Canvas(target_frame, width=100, height=100)
-        canvas.grid(row=i//3, column=i % 3, padx=10, pady=10)
+        canvas.grid(row=target_number//3, column=target_number %
+                    3, padx=10, pady=10)
 
         if is_trispot.get():
             canvas.create_oval(2, 2, 98, 98, fill="blue")
@@ -55,11 +58,11 @@ def overview():
             canvas.create_oval(30, 30, 70, 70, fill="red")
             canvas.create_oval(40, 40, 60, 60, fill="yellow")
 
-        for x, y in arrows_coordinates[i]:
+        for x, y in arrows_coordinates[target_number]:
             canvas.create_oval(x-2, y-2, x+2, y+2,
                                fill="green", outline="green")
 
-        canvas.bind("<Button-1>", lambda _: open_target(i))
+        canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
     overview_frame = tk.Frame(window)
     overview_frame.pack()
@@ -68,15 +71,29 @@ def overview():
         overview_frame, text="Nombre de flèches : " + str(arrow_number.get()))
     arrow_number_label.pack()
 
+    current_volley_label = tk.Label(
+        overview_frame, text="Volée n°" + str(current_volley))
+    current_volley_label.pack()
+
     target_frame = tk.Frame(overview_frame)
     target_frame.pack()
     for i in range(arrow_number.get()):
         small_target(i)
 
 
-def add_arrow(target_number):
+def add_impact(target_number):
     def on_click(event):
+        global current_volley
         arrows_coordinates[target_number].append((event.x/4, event.y/4))
+
+        new_volley = True
+        for arrow in arrows_coordinates:
+            if len(arrow) < current_volley:
+                new_volley = False
+                break
+        if new_volley:
+            current_volley += 1
+
         arrow_frame.destroy()
         overview()
 
