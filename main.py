@@ -21,6 +21,10 @@ def home():
     home_frame = ttk.Frame(window)
     home_frame.pack()
 
+    title_label = ttk.Label(
+        home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
+    title_label.pack()
+
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
     arrow_number_entry = ttk.Spinbox(
