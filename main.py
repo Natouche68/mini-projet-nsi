@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 window = tk.Tk()
 window.title("Mini-projet NSI")
@@ -17,20 +18,20 @@ def home():
         home_frame.destroy()
         overview()
 
-    home_frame = tk.Frame(window)
+    home_frame = ttk.Frame(window)
     home_frame.pack()
 
-    arrow_number_label = tk.Label(home_frame, text="Nombre de flèches :")
+    arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
-    arrow_number_entry = tk.Spinbox(
+    arrow_number_entry = ttk.Spinbox(
         home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
     arrow_number_entry.pack()
 
-    is_trispot_entry = tk.Checkbutton(
+    is_trispot_entry = ttk.Checkbutton(
         home_frame, text="Sur trispot", variable=is_trispot)
     is_trispot_entry.pack()
 
-    validate_button = tk.Button(home_frame, text="Commencer", command=start)
+    validate_button = ttk.Button(home_frame, text="Commencer", command=start)
     validate_button.pack()
 
 
@@ -64,18 +65,18 @@ def overview():
 
         canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
-    overview_frame = tk.Frame(window)
+    overview_frame = ttk.Frame(window)
     overview_frame.pack()
 
-    arrow_number_label = tk.Label(
+    arrow_number_label = ttk.Label(
         overview_frame, text="Nombre de flèches : " + str(arrow_number.get()))
     arrow_number_label.pack()
 
-    current_volley_label = tk.Label(
+    current_volley_label = ttk.Label(
         overview_frame, text="Volée n°" + str(current_volley))
     current_volley_label.pack()
 
-    target_frame = tk.Frame(overview_frame)
+    target_frame = ttk.Frame(overview_frame)
     target_frame.pack()
     for i in range(arrow_number.get()):
         small_target(i)
@@ -97,7 +98,7 @@ def add_impact(target_number):
         arrow_frame.destroy()
         overview()
 
-    arrow_frame = tk.Frame(window)
+    arrow_frame = ttk.Frame(window)
     arrow_frame.pack()
 
     canvas = tk.Canvas(arrow_frame, width=400, height=400)
