@@ -144,7 +144,32 @@ def add_impact(target_number):
 
 
 def stats():
-    print(arrows_coordinates)
+    def moyenne(list):
+        total_x = 0
+        total_y = 0
+        for x, y in list:
+            total_x += x
+            total_y += y
+        moyenne_x = total_x / len(list)
+        moyenne_y = total_y / len(list)
+        return (moyenne_x, moyenne_y)
+
+    stats_frame = ttk.Frame(window)
+    stats_frame.pack()
+
+    for i in range(len(arrows_coordinates)):
+        arrow_frame = ttk.Frame(stats_frame)
+        arrow_frame.pack()
+
+        arrow_number_label = ttk.Label(arrow_frame, text="Flèche n°" + str(i+1))
+        arrow_number_label.pack()
+
+        impacts_label = ttk.Label(arrow_frame, text=str(arrows_coordinates[i]))
+        impacts_label.pack()
+
+        moyenne_label = ttk.Label(arrow_frame, text="Moyenne : " + str(moyenne(arrows_coordinates[i])))
+        moyenne_label.pack()
+
 
 
 home()
