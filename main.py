@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import math
 
 window = tk.Tk()
 window.title("Mini-projet NSI")
@@ -145,14 +146,25 @@ def add_impact(target_number):
 
 def stats():
     def moyenne(list):
-        total_x = 0
-        total_y = 0
+        somme_x = 0
+        somme_y = 0
         for x, y in list:
-            total_x += x
-            total_y += y
-        moyenne_x = total_x / len(list)
-        moyenne_y = total_y / len(list)
+            somme_x += x
+            somme_y += y
+        moyenne_x = somme_x / len(list)
+        moyenne_y = somme_y / len(list)
         return (moyenne_x, moyenne_y)
+
+    def ecart_type(list):
+        moyenne_list = moyenne(list)
+        somme_ecart_carree_x = 0
+        somme_ecart_carree_y = 0
+        for x, y, in list:
+            somme_ecart_carree_x += (x - moyenne_list[0])**2
+            somme_ecart_carree_y += (y - moyenne_list[1])**2
+        ecart_type_x = math.sqrt(somme_ecart_carree_x / len(list))
+        ecart_type_y = math.sqrt(somme_ecart_carree_y / len(list))
+        return (ecart_type_x, ecart_type_y)
 
     stats_frame = ttk.Frame(window)
     stats_frame.pack()
@@ -161,15 +173,20 @@ def stats():
         arrow_frame = ttk.Frame(stats_frame)
         arrow_frame.pack()
 
-        arrow_number_label = ttk.Label(arrow_frame, text="Flèche n°" + str(i+1))
+        arrow_number_label = ttk.Label(
+            arrow_frame, text="Flèche n°" + str(i+1))
         arrow_number_label.pack()
 
         impacts_label = ttk.Label(arrow_frame, text=str(arrows_coordinates[i]))
         impacts_label.pack()
 
-        moyenne_label = ttk.Label(arrow_frame, text="Moyenne : " + str(moyenne(arrows_coordinates[i])))
+        moyenne_label = ttk.Label(
+            arrow_frame, text="Moyenne : " + str(moyenne(arrows_coordinates[i])))
         moyenne_label.pack()
 
+        ecart_type_label = ttk.Label(
+            arrow_frame, text="Ecart-tpe : " + str(ecart_type(arrows_coordinates[i])))
+        ecart_type_label.pack()
 
 
 home()
