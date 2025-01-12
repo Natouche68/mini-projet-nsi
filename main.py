@@ -73,6 +73,10 @@ def overview():
         canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
     def on_finish_click():
+        coordinates_length = len(arrows_coordinates[0])
+        for arrow in arrows_coordinates:
+            if len(arrow) != coordinates_length:
+                return
         overview_frame.destroy()
         stats()
 
