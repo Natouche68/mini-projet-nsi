@@ -63,10 +63,12 @@ def overview():
             canvas.create_oval(20, 20, 80, 80, fill="blue")
             canvas.create_oval(30, 30, 70, 70, fill="red")
             canvas.create_oval(40, 40, 60, 60, fill="yellow")
-
+        
         for x, y in arrows_coordinates[target_number]:
             canvas.create_oval(x-2, y-2, x+2, y+2,
                                fill="green", outline="green")
+
+        canvas.create_text(50, 49, text=str(target_number+1), font=("Segoe UI", 16))
 
         canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
