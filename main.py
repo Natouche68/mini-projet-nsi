@@ -22,18 +22,15 @@ def home():
     home_frame = ttk.Frame(window)
     home_frame.pack()
 
-    title_label = ttk.Label(
-        home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
+    title_label = ttk.Label(home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
     title_label.pack()
 
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
-    arrow_number_entry = ttk.Spinbox(
-        home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
+    arrow_number_entry = ttk.Spinbox(home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
     arrow_number_entry.pack()
 
-    is_trispot_entry = ttk.Checkbutton(
-        home_frame, text="Sur trispot", variable=is_trispot)
+    is_trispot_entry = ttk.Checkbutton(home_frame, text="Sur trispot", variable=is_trispot)
     is_trispot_entry.pack()
 
     validate_button = ttk.Button(home_frame, text="Commencer", command=start)
@@ -48,8 +45,7 @@ def overview():
 
     def small_target(target_number):
         canvas = tk.Canvas(target_frame, width=100, height=100)
-        canvas.grid(row=target_number//3, column=target_number %
-                    3, padx=10, pady=10)
+        canvas.grid(row=target_number//3, column=target_number % 3, padx=10, pady=10)
 
         if is_trispot.get():
             canvas.create_oval(2, 2, 98, 98, fill="blue")
@@ -65,8 +61,7 @@ def overview():
             canvas.create_oval(40, 40, 60, 60, fill="yellow")
         
         for x, y in arrows_coordinates[target_number]:
-            canvas.create_oval(x-2, y-2, x+2, y+2,
-                               fill="green", outline="green")
+            canvas.create_oval(x-2, y-2, x+2, y+2, fill="green", outline="green")
 
         canvas.create_text(50, 49, text=str(target_number+1), font=("Segoe UI", 16))
 
@@ -146,8 +141,7 @@ def add_impact(target_number):
         canvas.create_oval(190, 190, 210, 210, fill="yellow")
 
     for x, y in arrows_coordinates[target_number]:
-        canvas.create_oval(x*4-5, y*4-5, x*4+5, y*4+5,
-                           fill="green", outline="green")
+        canvas.create_oval(x*4-5, y*4-5, x*4+5, y*4+5, fill="green", outline="green")
 
     canvas.bind("<Button-1>", on_click)
 
@@ -181,19 +175,16 @@ def stats():
         arrow_frame = ttk.Frame(stats_frame)
         arrow_frame.pack()
 
-        arrow_number_label = ttk.Label(
-            arrow_frame, text="Flèche n°" + str(i+1))
+        arrow_number_label = ttk.Label(arrow_frame, text="Flèche n°" + str(i+1))
         arrow_number_label.pack()
 
         impacts_label = ttk.Label(arrow_frame, text=str(arrows_coordinates[i]))
         impacts_label.pack()
 
-        moyenne_label = ttk.Label(
-            arrow_frame, text="Moyenne : " + str(moyenne(arrows_coordinates[i])))
+        moyenne_label = ttk.Label(arrow_frame, text="Moyenne : " + str(moyenne(arrows_coordinates[i])))
         moyenne_label.pack()
 
-        ecart_type_label = ttk.Label(
-            arrow_frame, text="Ecart-tpe : " + str(ecart_type(arrows_coordinates[i])))
+        ecart_type_label = ttk.Label(arrow_frame, text="Ecart-tpe : " + str(ecart_type(arrows_coordinates[i])))
         ecart_type_label.pack()
 
 
