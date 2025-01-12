@@ -38,6 +38,9 @@ def home():
 
 
 def overview():
+    def is_target_complete(target_number):
+        return len(arrows_coordinates[target_number]) == current_volley
+
     def open_target(target_number):
         if len(arrows_coordinates[target_number]) < current_volley:
             overview_frame.destroy()
@@ -63,7 +66,11 @@ def overview():
         for x, y in arrows_coordinates[target_number]:
             canvas.create_oval(x-2, y-2, x+2, y+2, fill="green", outline="green")
 
-        canvas.create_text(50, 49, text=str(target_number+1), font=("Segoe UI", 16))
+        if is_target_complete(target_number):
+            canvas.create_oval(2, 2, 98, 98, fill="#C6C6C6")
+            canvas.create_text(50, 49, text="✔️", font=("Segoe UI Emoji", 16))
+        else:
+            canvas.create_text(50, 49, text=str(target_number+1), font=("Segoe UI", 16))
 
         canvas.bind("<Button-1>", lambda _: open_target(target_number))
 
