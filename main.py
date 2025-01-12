@@ -75,24 +75,26 @@ def overview():
         stats()
 
     overview_frame = ttk.Frame(window)
-    overview_frame.pack()
+    overview_frame.pack(fill="x")
 
-    arrow_number_label = ttk.Label(
-        overview_frame, text="Nombre de flèches : " + str(arrow_number.get()))
-    arrow_number_label.pack()
+    menu_bar = tk.Frame(overview_frame, bg="#3ED8FF")
+    menu_bar.pack(fill="x")
+    menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
+    menu_bar_content.pack(anchor='center')
 
-    current_volley_label = ttk.Label(
-        overview_frame, text="Volée n°" + str(current_volley))
-    current_volley_label.pack()
+    arrow_number_label = tk.Label(menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
+    arrow_number_label.grid(row=0,column=0)
+
+    current_volley_label = tk.Label(menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
+    current_volley_label.grid(row=0,column=1, padx=40, pady=10)
 
     target_frame = ttk.Frame(overview_frame)
     target_frame.pack()
     for i in range(arrow_number.get()):
         small_target(i)
 
-    finish_button = ttk.Button(
-        overview_frame, text="Terminer", command=on_finish_click)
-    finish_button.pack()
+    finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click)
+    finish_button.grid(row=0,column=2)
 
 
 def add_impact(target_number):
