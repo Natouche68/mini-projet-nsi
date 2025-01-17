@@ -87,7 +87,7 @@ def overview():
         for arrow in arrows_coordinates:
             if len(arrow) != coordinates_length:
                 return False
-        if coordinates_length == 0:
+        if coordinates_length <= 1:
             return False
         return True
 
