@@ -52,8 +52,8 @@ def overview():
             overview_frame.destroy()
             add_impact(target_number)
 
-    def on_target_click(event):
-        target_number = (event.y // 120) * 3 + (event.x // 120)
+    def on_target_click(event, scroll_bar_offset):
+        target_number = int(((event.y + scroll_bar_offset) // 120) * 3 + (event.x // 120))
         open_target(target_number)
 
     def small_target(target_number):
@@ -127,7 +127,7 @@ def overview():
     scroll_bar.config(command=target_canvas.yview)
     for i in range(arrow_number.get()):
         small_target(i)
-    target_canvas.bind("<Button-1>", on_target_click)
+    target_canvas.bind("<Button-1>", lambda event: on_target_click(event, scroll_bar.get()[0]*target_canvas_height))
 
     finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click, state="normal" if is_finish_button_active() else "disabled")
     finish_button.grid(row=0,column=2)
