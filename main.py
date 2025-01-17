@@ -52,44 +52,53 @@ def overview():
             overview_frame.destroy()
             add_impact(target_number)
 
+    def on_target_click(event):
+        target_number = (event.y // 120) * 3 + (event.x // 120)
+        open_target(target_number)
+
     def small_target(target_number):
-        canvas = tk.Canvas(target_frame, width=100, height=100)
-        canvas.grid(row=target_number//3, column=target_number % 3, padx=10, pady=10)
+        xPos = (target_number % 3) * 120 + 10
+        yPos = (target_number // 3) * 120 + 10
 
         if is_trispot.get():
-            canvas.create_oval(2, 2, 98, 98, fill="blue")
-            canvas.create_oval(11, 11, 89, 89, fill="red")
-            canvas.create_oval(20, 20, 80, 80, fill="red")
-            canvas.create_oval(30, 30, 70, 70, fill="yellow")
-            canvas.create_oval(40, 40, 60, 60, fill="yellow")
+            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="blue")
+            target_canvas.create_oval(xPos+11, yPos+11, xPos+89, yPos+89, fill="red")
+            target_canvas.create_oval(xPos+20, yPos+20, xPos+80, yPos+80, fill="red")
+            target_canvas.create_oval(xPos+30, yPos+30, xPos+70, yPos+70, fill="yellow")
+            target_canvas.create_oval(xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
         else:
-            canvas.create_oval(2, 2, 98, 98, fill="white")
-            canvas.create_oval(11, 11, 89, 89, fill="black")
-            canvas.create_oval(20, 20, 80, 80, fill="blue")
-            canvas.create_oval(30, 30, 70, 70, fill="red")
-            canvas.create_oval(40, 40, 60, 60, fill="yellow")
+            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="white")
+            target_canvas.create_oval(xPos+11, yPos+11, xPos+89, yPos+89, fill="black")
+            target_canvas.create_oval(xPos+20, yPos+20, xPos+80, yPos+80, fill="blue")
+            target_canvas.create_oval(xPos+30, yPos+30, xPos+70, yPos+70, fill="red")
+            target_canvas.create_oval(xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
         
         for x, y in arrows_coordinates[target_number]:
-            canvas.create_oval(x-2, y-2, x+2, y+2, fill="green", outline="green")
+            target_canvas.create_oval(xPos+x-2, yPos+y-2, xPos+x+2, yPos+y+2, fill="green", outline="green")
 
         if is_target_complete(target_number):
-            canvas.create_oval(2, 2, 98, 98, fill="#C6C6C6")
-            canvas.create_text(50, 49, text="✔️", font=("Segoe UI Emoji", 16))
+            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="#C6C6C6")
+            target_canvas.create_text(xPos+50, yPos+49, text="✔️", font=("Segoe UI Emoji", 16))
         else:
-            canvas.create_text(50, 49, text=str(target_number+1), font=("Segoe UI", 16))
-
-        canvas.bind("<Button-1>", lambda _: open_target(target_number))
-
-    def on_finish_click():
+            target_canvas.create_text(xPos+50, yPos+49, text=str(target_number+1), font=("Segoe UI", 16))
+    
+    def is_finish_button_active():
         coordinates_length = len(arrows_coordinates[0])
         for arrow in arrows_coordinates:
             if len(arrow) != coordinates_length:
-                return
+                return False
+        if coordinates_length == 0:
+            return False
+        return True
+
+    def on_finish_click():
+        if not is_finish_button_active():
+            return
         overview_frame.destroy()
         stats()
-
+    
     overview_frame = ttk.Frame(window)
-    overview_frame.pack(fill="x")
+    overview_frame.pack(fill="both")
 
     menu_bar = tk.Frame(overview_frame, bg="#3ED8FF")
     menu_bar.pack(fill="x")
@@ -102,12 +111,25 @@ def overview():
     current_volley_label = tk.Label(menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
     current_volley_label.grid(row=0,column=1, padx=40, pady=10)
 
-    target_frame = ttk.Frame(overview_frame)
-    target_frame.pack()
+    target_frame_container = tk.Frame(overview_frame)
+    target_frame_container.pack(fill="both")
+    scroll_bar = ttk.Scrollbar(target_frame_container, orient="vertical")
+    scroll_bar.pack(side="right", fill="y")
+    target_canvas_height = math.ceil(arrow_number.get() / 3) * 120
+    target_canvas = tk.Canvas(
+        target_frame_container,
+        width=360,
+        height=target_canvas_height,
+        yscrollcommand=scroll_bar.set,
+        scrollregion="0 0 360 " + str(target_canvas_height)
+    )
+    target_canvas.pack()
+    scroll_bar.config(command=target_canvas.yview)
     for i in range(arrow_number.get()):
         small_target(i)
+    target_canvas.bind("<Button-1>", on_target_click)
 
-    finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click)
+    finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click, state="normal" if is_finish_button_active() else "disabled")
     finish_button.grid(row=0,column=2)
 
 def add_impact(target_number):
