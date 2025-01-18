@@ -123,7 +123,7 @@ def overview():
     menu_bar = tk.Frame(overview_frame, bg="#3ED8FF")
     menu_bar.pack(fill="x")
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
-    menu_bar_content.pack(anchor='center')
+    menu_bar_content.pack()
 
     arrow_number_label = tk.Label(
         menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
@@ -174,7 +174,24 @@ def add_impact(target_number):
         overview()
 
     arrow_frame = ttk.Frame(window)
-    arrow_frame.pack()
+    arrow_frame.pack(fill="both")
+
+    menu_bar = tk.Frame(arrow_frame, bg="#3ED8FF")
+    menu_bar.pack(fill="x")
+    menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
+    menu_bar_content.pack()
+
+    arrow_number_label = tk.Label(
+        menu_bar_content, text="Flèche n° : " + str(target_number + 1), bg="#3ED8FF")
+    arrow_number_label.grid(row=0, column=0)
+
+    current_volley_label = tk.Label(
+        menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
+    current_volley_label.grid(row=0, column=1, padx=40, pady=10)
+
+    finish_button = tk.Button(menu_bar_content, text="Valider",
+                              command=lambda _: print("hello"), state="normal")
+    finish_button.grid(row=0, column=2)
 
     canvas = tk.Canvas(arrow_frame, width=400, height=400)
     canvas.pack(padx=10, pady=10)
