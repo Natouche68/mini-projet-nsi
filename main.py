@@ -5,15 +5,16 @@ import math
 window = tk.Tk()
 window.title("Mini-projet NSI")
 window.geometry("800x500")
-window.minsize(800,500)
-window.maxsize(800,500)
+window.minsize(800, 500)
+window.maxsize(800, 500)
 
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
 current_volley = 1
-arc=tk.PhotoImage(file='arc_accueil.png')
+arc = tk.PhotoImage(file='arc_accueil.png')
 window.wm_attributes("-transparentcolor", "orange")
+
 
 def home():
     def start():
@@ -23,25 +24,29 @@ def home():
         can1.destroy()
         overview()
 
-    can1=tk.Canvas(window, width=800, height=500)
-    can1.create_image(400,250,image=arc)
-    can1.place(x=0,y=0)
+    can1 = tk.Canvas(window, width=800, height=500)
+    can1.create_image(400, 250, image=arc)
+    can1.place(x=0, y=0)
     home_frame = ttk.Frame(window)
-    home_frame.pack(pady=(10,0))
+    home_frame.pack(pady=(10, 0))
 
-    title_label = ttk.Label(home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
-    title_label.pack(padx=10,pady=5)
+    title_label = ttk.Label(
+        home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
+    title_label.pack(padx=10, pady=5)
 
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
-    arrow_number_entry = ttk.Spinbox(home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
-    arrow_number_entry.pack(pady=(5,0))
+    arrow_number_entry = ttk.Spinbox(
+        home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
+    arrow_number_entry.pack(pady=(5, 0))
 
-    is_trispot_entry = ttk.Checkbutton(home_frame, text="Sur trispot", variable=is_trispot)
+    is_trispot_entry = ttk.Checkbutton(
+        home_frame, text="Sur trispot", variable=is_trispot)
     is_trispot_entry.pack()
 
     validate_button = ttk.Button(home_frame, text="Commencer", command=start)
-    validate_button.pack(pady=(0,10))
+    validate_button.pack(pady=(0, 10))
+
 
 def overview():
     def is_target_complete(target_number):
@@ -53,7 +58,8 @@ def overview():
             add_impact(target_number)
 
     def on_target_click(event, scroll_bar_offset):
-        target_number = int(((event.y + scroll_bar_offset) // 120) * 3 + (event.x // 120))
+        target_number = int(
+            ((event.y + scroll_bar_offset) // 120) * 3 + (event.x // 120))
         open_target(target_number)
 
     def small_target(target_number):
@@ -61,27 +67,41 @@ def overview():
         yPos = (target_number // 3) * 120 + 10
 
         if is_trispot.get():
-            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="blue")
-            target_canvas.create_oval(xPos+11, yPos+11, xPos+89, yPos+89, fill="red")
-            target_canvas.create_oval(xPos+20, yPos+20, xPos+80, yPos+80, fill="red")
-            target_canvas.create_oval(xPos+30, yPos+30, xPos+70, yPos+70, fill="yellow")
-            target_canvas.create_oval(xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
+            target_canvas.create_oval(
+                xPos+2, yPos+2, xPos+98, yPos+98, fill="blue")
+            target_canvas.create_oval(
+                xPos+11, yPos+11, xPos+89, yPos+89, fill="red")
+            target_canvas.create_oval(
+                xPos+20, yPos+20, xPos+80, yPos+80, fill="red")
+            target_canvas.create_oval(
+                xPos+30, yPos+30, xPos+70, yPos+70, fill="yellow")
+            target_canvas.create_oval(
+                xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
         else:
-            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="white")
-            target_canvas.create_oval(xPos+11, yPos+11, xPos+89, yPos+89, fill="black")
-            target_canvas.create_oval(xPos+20, yPos+20, xPos+80, yPos+80, fill="blue")
-            target_canvas.create_oval(xPos+30, yPos+30, xPos+70, yPos+70, fill="red")
-            target_canvas.create_oval(xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
-        
+            target_canvas.create_oval(
+                xPos+2, yPos+2, xPos+98, yPos+98, fill="white")
+            target_canvas.create_oval(
+                xPos+11, yPos+11, xPos+89, yPos+89, fill="black")
+            target_canvas.create_oval(
+                xPos+20, yPos+20, xPos+80, yPos+80, fill="blue")
+            target_canvas.create_oval(
+                xPos+30, yPos+30, xPos+70, yPos+70, fill="red")
+            target_canvas.create_oval(
+                xPos+40, yPos+40, xPos+60, yPos+60, fill="yellow")
+
         for x, y in arrows_coordinates[target_number]:
-            target_canvas.create_oval(xPos+x-2, yPos+y-2, xPos+x+2, yPos+y+2, fill="green", outline="green")
+            target_canvas.create_oval(
+                xPos+x-2, yPos+y-2, xPos+x+2, yPos+y+2, fill="green", outline="green")
 
         if is_target_complete(target_number):
-            target_canvas.create_oval(xPos+2, yPos+2, xPos+98, yPos+98, fill="#C6C6C6")
-            target_canvas.create_text(xPos+50, yPos+49, text="✔️", font=("Segoe UI Emoji", 16))
+            target_canvas.create_oval(
+                xPos+2, yPos+2, xPos+98, yPos+98, fill="#C6C6C6")
+            target_canvas.create_text(
+                xPos+50, yPos+49, text="✔️", font=("Segoe UI Emoji", 16))
         else:
-            target_canvas.create_text(xPos+50, yPos+49, text=str(target_number+1), font=("Segoe UI", 16))
-    
+            target_canvas.create_text(
+                xPos+50, yPos+49, text=str(target_number+1), font=("Segoe UI", 16))
+
     def is_finish_button_active():
         coordinates_length = len(arrows_coordinates[0])
         for arrow in arrows_coordinates:
@@ -96,7 +116,7 @@ def overview():
             return
         overview_frame.destroy()
         stats()
-    
+
     overview_frame = ttk.Frame(window)
     overview_frame.pack(fill="both")
 
@@ -105,11 +125,13 @@ def overview():
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
     menu_bar_content.pack(anchor='center')
 
-    arrow_number_label = tk.Label(menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
-    arrow_number_label.grid(row=0,column=0)
+    arrow_number_label = tk.Label(
+        menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
+    arrow_number_label.grid(row=0, column=0)
 
-    current_volley_label = tk.Label(menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
-    current_volley_label.grid(row=0,column=1, padx=40, pady=10)
+    current_volley_label = tk.Label(
+        menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
+    current_volley_label.grid(row=0, column=1, padx=40, pady=10)
 
     target_frame_container = tk.Frame(overview_frame)
     target_frame_container.pack(fill="both")
@@ -127,10 +149,13 @@ def overview():
     scroll_bar.config(command=target_canvas.yview)
     for i in range(arrow_number.get()):
         small_target(i)
-    target_canvas.bind("<Button-1>", lambda event: on_target_click(event, scroll_bar.get()[0]*target_canvas_height))
+    target_canvas.bind("<Button-1>", lambda event: on_target_click(event,
+                       scroll_bar.get()[0]*target_canvas_height))
 
-    finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click, state="normal" if is_finish_button_active() else "disabled")
-    finish_button.grid(row=0,column=2)
+    finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click,
+                              state="normal" if is_finish_button_active() else "disabled")
+    finish_button.grid(row=0, column=2)
+
 
 def add_impact(target_number):
     def on_click(event):
@@ -206,12 +231,12 @@ def stats():
     stats_frame = ttk.Frame(window)
     stats_frame.pack()
 
-    rows=0
-    columns=0
+    rows = 0
+    columns = 0
 
     for i in range(len(arrows_coordinates)):
         arrow_frame = ttk.Frame(stats_frame)
-        arrow_frame.grid(row=rows,column=columns)
+        arrow_frame.grid(row=rows, column=columns)
 
         arrow_number_label = ttk.Label(
             arrow_frame, text="Flèche n°" + str(i+1))
@@ -229,10 +254,10 @@ def stats():
         ecart_type_label.pack()
 
         if rows == 4:
-            rows=-1
-            columns+=1
+            rows = -1
+            columns += 1
         if rows < 4:
-            rows+=1
+            rows += 1
 
 
 home()
