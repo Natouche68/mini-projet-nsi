@@ -60,8 +60,8 @@ def overview():
         global overview_scroll_position
 
         if len(arrows_coordinates[target_number]) < current_volley:
-            overview_frame.destroy()
             overview_scroll_position = scroll_bar.get()[0]
+            overview_frame.destroy()
             add_impact(target_number)
 
     def on_target_click(event, scroll_bar_offset):
