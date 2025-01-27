@@ -98,7 +98,7 @@ def overview():
 
         for x, y in arrows_coordinates[target_number]:
             target_canvas.create_oval(
-                xPos+x-2, yPos+y-2, xPos+x+2, yPos+y+2, fill="green", outline="green")
+                xPos+x-2, yPos+y-2, xPos+x+2, yPos+y+2, fill="#00C700", outline="#00C700")
 
         if is_target_complete(target_number):
             target_canvas.create_oval(
@@ -172,7 +172,7 @@ def add_impact(target_number):
         global impact_to_add
         impact_to_add = [(event.x-30)/4, (event.y-30)/4]
         draw_target()
-        canvas.create_oval(impact_to_add[0]*4+25, impact_to_add[1]*4+25, impact_to_add[0]*4+35, impact_to_add[1]*4+35, fill="green", outline="green")
+        canvas.create_oval(impact_to_add[0]*4+25, impact_to_add[1]*4+25, impact_to_add[0]*4+35, impact_to_add[1]*4+35, fill="#00C700", outline="#00C700")
         finish_button.config(state="normal")
 
     def on_button_click():
@@ -216,7 +216,7 @@ def add_impact(target_number):
             canvas.create_oval(220, 220, 240, 240, fill="yellow")
 
         for x, y in arrows_coordinates[target_number]:
-            canvas.create_oval(x*4+25, y*4+25, x*4+35, y*4+35, fill="green", outline="green")
+            canvas.create_oval(x*4+25, y*4+25, x*4+35, y*4+35, fill="#00C700", outline="#00C700")
         
     arrow_frame = ttk.Frame(window)
     arrow_frame.pack(fill="both")
