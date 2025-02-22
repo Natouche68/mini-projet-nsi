@@ -286,7 +286,7 @@ def stats():
     
     scroll_bar_score=ttk.Scrollbar(stats_frame, orient='vertical')
     scroll_bar_score.pack(side='right',fill='y')
-    can2=tk.Canvas(stats_frame,width=800,height=(len(arrows_classement)+1)*30,yscrollcommand=scroll_bar_score.set,scrollregion='0 0 800 '+str((len(arrows_classement)+1)*30))
+    can2 = tk.Canvas(stats_frame, width=800, height=(len(arrows_classement)+1)*30, yscrollcommand=scroll_bar_score.set, scrollregion='0 0 800 '+str((len(arrows_classement)+1)*30))
     can2.pack()
     scroll_bar_score.config(command=can2.yview)
     
@@ -299,11 +299,11 @@ def stats():
     arrow_y = 3
 
     for i in range(len(arrows_classement)):
-        can2.create_text(75,15*arrow_y,text=str(arrows_classement[i][1]+1))
-        can2.create_text(225,15*arrow_y,text="x : " + str(arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
-        can2.create_text(425,15*arrow_y,text="x : " + str(arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
-        can2.create_text(625,15*arrow_y,text=str(arrows_classement[i][0]))
-        can2.create_text(725,15*arrow_y,text="#"+str(i+1))
+        can2.create_text(75, 15 * arrow_y, text=str(arrows_classement[i][1] + 1))
+        can2.create_text(225, 15 * arrow_y, text="x : " + str(round(arrows_classement[i][2][0], 2)) + "   y : " + str(round(arrows_classement[i][2][1], 2)))
+        can2.create_text(425, 15 * arrow_y, text="x : " + str(round(arrows_classement[i][3][0], 2)) + "   y : " + str(round(arrows_classement[i][3][1], 2)))
+        can2.create_text(625, 15 * arrow_y, text=str(round(arrows_classement[i][0], 2)))
+        can2.create_text(725, 15 * arrow_y, text="#"+str(i+1))
         arrow_y += 2
 
 
