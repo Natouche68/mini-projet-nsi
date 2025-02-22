@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import matplotlib.pyplot as plt
+import numpy as np
 import math
 
 window = tk.Tk()
@@ -286,7 +288,7 @@ def stats():
     
     scroll_bar_score=ttk.Scrollbar(stats_frame, orient='vertical')
     scroll_bar_score.pack(side='right',fill='y')
-    can2 = tk.Canvas(stats_frame, width=800, height=(len(arrows_classement)+1)*30, yscrollcommand=scroll_bar_score.set, scrollregion='0 0 800 '+str((len(arrows_classement)+1)*30))
+    can2 = tk.Canvas(stats_frame, width=800, height=(len(arrows_classement)+2)*30, yscrollcommand=scroll_bar_score.set, scrollregion='0 0 800 '+str((len(arrows_classement)+2)*30))
     can2.pack()
     scroll_bar_score.config(command=can2.yview)
     
@@ -305,6 +307,26 @@ def stats():
         can2.create_text(625, 15 * arrow_y, text=str(round(arrows_classement[i][0], 2)))
         can2.create_text(725, 15 * arrow_y, text="#"+str(i+1))
         arrow_y += 2
+    
+
+    # Matplotlib
+    x = np.arange(len(arrows_classement))
+    width = 0.2
+    arrows_scores = [arrow[0] for arrow in arrows_classement]
+    arrows_moyennes = [math.sqrt((arrow[2][0] - 50)**2 + (arrow[2][1] - 50)**2) for arrow in arrows_classement]
+    arrows_ecart_types = [arrow[3][0] * arrow[3][1] for arrow in arrows_classement]
+    
+    plt.bar(x - width, arrows_scores, width, color="blue", label="Scores de régularité")
+    plt.bar(x, arrows_moyennes, width, color="yellow", label="Moyennes")
+    plt.bar(x + width, arrows_ecart_types, width, color="green", label="Ecarts-type")
+    plt.xlabel("Numéros de flèches")
+    plt.title("Statistiques de régularité")
+
+    plt.legend()
+
+    show_graph_button = ttk.Button(can2, text="Afficher le graphique", command=lambda: plt.show())
+    can2.create_window(400, 15 * arrow_y, window=show_graph_button)
+
 
 
 home()
