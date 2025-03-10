@@ -1,58 +1,52 @@
 import tkinter as tk
 from tkinter import ttk
-import matplotlib.pyplot as plt
-import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 window = tk.Tk()
 window.title("Mini-projet NSI")
 window.geometry("800x500")
-window.minsize(800, 500)
-window.maxsize(800, 500)
+window.minsize(800,500)
+window.maxsize(800,500)
 
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
 current_volley = 1
 overview_scroll_position = 0
-arc = tk.PhotoImage(file='arc_accueil.png')
+arc=tk.PhotoImage(file='arc_accueil.png')
 window.wm_attributes("-transparentcolor", "orange")
-
 
 def home():
     def start():
-        if arrow_number.get() < 1:
-            return
-
         for _ in range(arrow_number.get()):
             arrows_coordinates.append([])
         home_frame.destroy()
         can1.destroy()
         overview()
 
-    can1 = tk.Canvas(window, width=800, height=500)
-    can1.create_image(400, 250, image=arc)
-    can1.place(x=0, y=0)
+    can1=tk.Canvas(window, width=800, height=500)
+    can1.create_image(400,250,image=arc)
+    can1.place(x=0,y=0)
     home_frame = ttk.Frame(window)
-    home_frame.pack(pady=(10, 0))
+    home_frame.pack(pady=(10,0))
 
     title_label = ttk.Label(
         home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
-    title_label.pack(padx=10, pady=5)
+    title_label.pack(padx=10,pady=5)
 
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
     arrow_number_entry = ttk.Spinbox(
         home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
-    arrow_number_entry.pack(pady=(5, 0))
+    arrow_number_entry.pack(pady=(5,0))
 
     is_trispot_entry = ttk.Checkbutton(
         home_frame, text="Sur trispot", variable=is_trispot)
     is_trispot_entry.pack()
 
     validate_button = ttk.Button(home_frame, text="Commencer", command=start)
-    validate_button.pack(pady=(0, 10))
-
+    validate_button.pack(pady=(0,10))
 
 def overview():
     def is_target_complete(target_number):
@@ -248,6 +242,7 @@ def add_impact(target_number):
 
 def stats():
     arrows_classement = []
+    score_list = []
 
     def moyenne(list):
         somme_x = 0
@@ -257,6 +252,10 @@ def stats():
             somme_y += y
         moyenne_x = somme_x / len(list)
         moyenne_y = somme_y / len(list)
+        moyenne_x=int(moyenne_x*100)
+        moyenne_y=int(moyenne_y*100)
+        moyenne_x/=100
+        moyenne_y/=100
         return (moyenne_x, moyenne_y)
 
     def ecart_type(list):
@@ -268,12 +267,18 @@ def stats():
             somme_ecart_carree_y += (y - moyenne_list[1])**2
         ecart_type_x = math.sqrt(somme_ecart_carree_x / len(list))
         ecart_type_y = math.sqrt(somme_ecart_carree_y / len(list))
+        ecart_type_x=int(ecart_type_x*1000)
+        ecart_type_y=int(ecart_type_y*100)
+        ecart_type_x/=1000
+        ecart_type_y/=1000
         return (ecart_type_x, ecart_type_y)
 
-    def score(moyenne_score,ecart_type_score):
+    def score(moyenne_score,ecart_type_score,list,number):
         distance=math.sqrt((moyenne_score[0]-50)**2+(moyenne_score[1]-50)**2)
         score_fleche=1000/(10*distance+(ecart_type_score[0]*ecart_type_score[1]))
-        score_final=float(score_fleche)
+        score_fleche=int(score_fleche*1000)
+        score_final=score_fleche/1000
+        list.append((number,score_final))
         return (score_final)
 
     stats_frame = ttk.Frame(window)
@@ -282,52 +287,45 @@ def stats():
     for i in range(len(arrows_coordinates)):
         moyenne_fleche = moyenne(arrows_coordinates[i])
         ecart_type_fleche=ecart_type(arrows_coordinates[i])
-        arrows_classement.append([score(moyenne_fleche,ecart_type_fleche),i,moyenne_fleche,ecart_type_fleche])
+        arrows_classement.append([score(moyenne_fleche,ecart_type_fleche,score_list,i+1),i,moyenne_fleche,ecart_type_fleche])
     arrows_classement.sort()
     arrows_classement.reverse()
     
     scroll_bar_score=ttk.Scrollbar(stats_frame, orient='vertical')
     scroll_bar_score.pack(side='right',fill='y')
-    can2 = tk.Canvas(stats_frame, width=800, height=(len(arrows_classement)+2)*30, yscrollcommand=scroll_bar_score.set, scrollregion='0 0 800 '+str((len(arrows_classement)+2)*30))
+    can2=tk.Canvas(stats_frame,width=800,height=(len(arrows_classement)+3)*30,yscrollcommand=scroll_bar_score.set,scrollregion='0 0 800 '+str((len(arrows_classement)+1)*30))
     can2.pack()
     scroll_bar_score.config(command=can2.yview)
     
-    can2.create_text(75,15,text="Flèche n°")
-    can2.create_text(225,15,text="Moyenne :")
-    can2.create_text(425,15,text="Ecart-type :")
-    can2.create_text(625,15,text="Score :")
-    can2.create_text(725,15,text="Classement :")
+    can2.create_text(250,15,text="Flèche n°")
+    can2.create_text(400,15,text="Moyenne :")
+    can2.create_text(550,15,text="Ecart-type :")
+    can2.create_text(700,15,text="Score :")
+    can2.create_text(100,15,text="Classement :")
 
     arrow_y = 3
 
     for i in range(len(arrows_classement)):
-        can2.create_text(75, 15 * arrow_y, text=str(arrows_classement[i][1] + 1))
-        can2.create_text(225, 15 * arrow_y, text="x : " + str(round(arrows_classement[i][2][0], 2)) + "   y : " + str(round(arrows_classement[i][2][1], 2)))
-        can2.create_text(425, 15 * arrow_y, text="x : " + str(round(arrows_classement[i][3][0], 2)) + "   y : " + str(round(arrows_classement[i][3][1], 2)))
-        can2.create_text(625, 15 * arrow_y, text=str(round(arrows_classement[i][0], 2)))
-        can2.create_text(725, 15 * arrow_y, text="#"+str(i+1))
+        can2.create_text(250,15*arrow_y,text="n°" + str(arrows_classement[i][1]+1))
+        can2.create_text(400,15*arrow_y,text="x : " + str(arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
+        can2.create_text(550,15*arrow_y,text="x : " + str(arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
+        can2.create_text(700,15*arrow_y,text=str(arrows_classement[i][0]))
+        can2.create_text(100,15*arrow_y,text="#"+str(i+1))
         arrow_y += 2
     
-
-    # Matplotlib
-    x = np.arange(len(arrows_classement))
-    width = 0.2
-    arrows_scores = [arrow[0] for arrow in arrows_classement]
-    arrows_moyennes = [math.sqrt((arrow[2][0] - 50)**2 + (arrow[2][1] - 50)**2) for arrow in arrows_classement]
-    arrows_ecart_types = [arrow[3][0] * arrow[3][1] for arrow in arrows_classement]
-    
-    plt.bar(x - width, arrows_scores, width, color="blue", label="Scores de régularité")
-    plt.bar(x, arrows_moyennes, width, color="yellow", label="Moyennes")
-    plt.bar(x + width, arrows_ecart_types, width, color="green", label="Ecarts-type")
-    plt.xlabel("Numéros de flèches")
-    plt.title("Statistiques de régularité")
-
-    plt.legend()
-
-    show_graph_button = ttk.Button(can2, text="Afficher le graphique", command=lambda: plt.show())
-    can2.create_window(400, 15 * arrow_y, window=show_graph_button)
-
-
+    def plots(list):
+        plots_score=[]
+        plots_fleche=[]
+        for i in range(len(list)):
+            plots_fleche.append(list[i][1]+1)
+            plots_score.append(list[i][0])
+        fig, axes = plt.subplots()
+        axes.bar(x = plots_fleche, height = plots_score)
+        plt.ylabel('Score')
+        plt.xlabel('Numéro de flèche')
+        plt.show()
+    button2 = ttk.Button(window, text="Graphique", command=lambda : plots(arrows_classement))
+    button2_window = can2.create_window(400, 15*arrow_y, window=button2)
 
 home()
 window.mainloop()
