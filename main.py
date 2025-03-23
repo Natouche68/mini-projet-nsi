@@ -290,10 +290,27 @@ def stats():
         arrows_classement.append([score(moyenne_fleche,ecart_type_fleche,score_list,i+1),i,moyenne_fleche,ecart_type_fleche])
     arrows_classement.sort()
     arrows_classement.reverse()
+
+    menu_bar = tk.Frame(stats_frame, bg="#3ED8FF")
+    menu_bar.pack(fill="x")
+    menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
+    menu_bar_content.pack()
+
+    arrow_number_label = tk.Label(
+        menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
+    arrow_number_label.grid(row=0, column=0)
     
-    scroll_bar_score=ttk.Scrollbar(stats_frame, orient='vertical')
+    table_container = ttk.Frame(stats_frame)
+    table_container.pack()
+
+    scroll_bar_score=ttk.Scrollbar(table_container, orient='vertical')
     scroll_bar_score.pack(side='right',fill='y')
-    can2=tk.Canvas(stats_frame,width=800,height=(len(arrows_classement)+3)*30,yscrollcommand=scroll_bar_score.set,scrollregion='0 0 800 '+str((len(arrows_classement)+1)*30))
+    can2=tk.Canvas(
+        table_container,
+        width=800,
+        height=(len(arrows_classement) + 1)*30,
+        yscrollcommand=scroll_bar_score.set,
+        scrollregion='0 0 800 ' + str((len(arrows_classement) + 1)*30))
     can2.pack()
     scroll_bar_score.config(command=can2.yview)
     
@@ -324,8 +341,9 @@ def stats():
         plt.ylabel('Score')
         plt.xlabel('Numéro de flèche')
         plt.show()
-    button2 = ttk.Button(window, text="Graphique", command=lambda : plots(arrows_classement))
-    button2_window = can2.create_window(400, 15*arrow_y, window=button2)
+    graph_button = tk.Button(menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
+    graph_button.grid(row=0, column=1, padx=40, pady=10)
+
 
 home()
 window.mainloop()
