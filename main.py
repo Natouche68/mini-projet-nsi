@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import math
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 window = tk.Tk()
 window.title("Mini-projet NSI")
@@ -347,10 +348,12 @@ def stats():
         for i in range(len(list)):
             plots_fleche.append(list[i][1]+1)
             plots_score.append(list[i][0])
-        fig, axes = plt.subplots()
+        _, axes = plt.subplots()
         axes.bar(x=plots_fleche, height=plots_score)
-        plt.ylabel('Score')
-        plt.xlabel('Numéro de flèche')
+        axes.xaxis.set_major_locator(MaxNLocator(integer=True))
+        axes.set_title("Tri de flèches")
+        plt.ylabel("Score")
+        plt.xlabel("Numéro de flèche")
         plt.show()
     graph_button = tk.Button(
         menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
