@@ -6,16 +6,17 @@ import matplotlib.pyplot as plt
 window = tk.Tk()
 window.title("Mini-projet NSI")
 window.geometry("800x500")
-window.minsize(800,500)
-window.maxsize(800,500)
+window.minsize(800, 500)
+window.maxsize(800, 500)
 
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
 current_volley = 1
 overview_scroll_position = 0
-arc=tk.PhotoImage(file='arc_accueil.png')
+arc = tk.PhotoImage(file='arc_accueil.png')
 window.wm_attributes("-transparentcolor", "orange")
+
 
 def home():
     def start():
@@ -25,28 +26,29 @@ def home():
         can1.destroy()
         overview()
 
-    can1=tk.Canvas(window, width=800, height=500)
-    can1.create_image(400,250,image=arc)
-    can1.place(x=0,y=0)
+    can1 = tk.Canvas(window, width=800, height=500)
+    can1.create_image(400, 250, image=arc)
+    can1.place(x=0, y=0)
     home_frame = ttk.Frame(window)
-    home_frame.pack(pady=(10,0))
+    home_frame.pack(pady=(10, 0))
 
     title_label = ttk.Label(
         home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
-    title_label.pack(padx=10,pady=5)
+    title_label.pack(padx=10, pady=5)
 
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
     arrow_number_entry = ttk.Spinbox(
         home_frame, from_=1, to=30, increment=1, textvariable=arrow_number)
-    arrow_number_entry.pack(pady=(5,0))
+    arrow_number_entry.pack(pady=(5, 0))
 
     is_trispot_entry = ttk.Checkbutton(
         home_frame, text="Sur trispot", variable=is_trispot)
     is_trispot_entry.pack()
 
     validate_button = ttk.Button(home_frame, text="Commencer", command=start)
-    validate_button.pack(pady=(0,10))
+    validate_button.pack(pady=(0, 10))
+
 
 def overview():
     def is_target_complete(target_number):
@@ -160,6 +162,7 @@ def overview():
                               state="normal" if is_finish_button_active() else "disabled")
     finish_button.grid(row=0, column=2)
 
+
 def add_impact(target_number):
     global impact_to_add
     impact_to_add = [None, None]
@@ -168,7 +171,8 @@ def add_impact(target_number):
         global impact_to_add
         impact_to_add = [(event.x-30)/4, (event.y-30)/4]
         draw_target()
-        canvas.create_oval(impact_to_add[0]*4+25, impact_to_add[1]*4+25, impact_to_add[0]*4+35, impact_to_add[1]*4+35, fill="#00C700", outline="#00C700")
+        canvas.create_oval(impact_to_add[0]*4+25, impact_to_add[1]*4+25, impact_to_add[0]
+                           * 4+35, impact_to_add[1]*4+35, fill="#00C700", outline="#00C700")
         finish_button.config(state="normal")
 
     def on_button_click():
@@ -176,7 +180,7 @@ def add_impact(target_number):
 
         if impact_to_add != [None, None]:
             arrows_coordinates[target_number].append(impact_to_add)
-        
+
             new_volley = True
             for arrow in arrows_coordinates:
                 if len(arrow) < current_volley:
@@ -212,8 +216,9 @@ def add_impact(target_number):
             canvas.create_oval(220, 220, 240, 240, fill="yellow")
 
         for x, y in arrows_coordinates[target_number]:
-            canvas.create_oval(x*4+25, y*4+25, x*4+35, y*4+35, fill="#00C700", outline="#00C700")
-        
+            canvas.create_oval(x*4+25, y*4+25, x*4+35, y*4+35,
+                               fill="#00C700", outline="#00C700")
+
     arrow_frame = ttk.Frame(window)
     arrow_frame.pack(fill="both")
 
@@ -230,13 +235,14 @@ def add_impact(target_number):
         menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
     current_volley_label.grid(row=0, column=1, padx=40, pady=10)
 
-    finish_button = tk.Button(menu_bar_content, text="Valider", command=on_button_click, state="disabled")
+    finish_button = tk.Button(
+        menu_bar_content, text="Valider", command=on_button_click, state="disabled")
     finish_button.grid(row=0, column=2)
 
     canvas = tk.Canvas(arrow_frame, width=460, height=460)
     canvas.pack()
     draw_target()
-    
+
     canvas.bind("<Button-1>", on_target_click)
 
 
@@ -252,10 +258,10 @@ def stats():
             somme_y += y
         moyenne_x = somme_x / len(list)
         moyenne_y = somme_y / len(list)
-        moyenne_x=int(moyenne_x*100)
-        moyenne_y=int(moyenne_y*100)
-        moyenne_x/=100
-        moyenne_y/=100
+        moyenne_x = int(moyenne_x*100)
+        moyenne_y = int(moyenne_y*100)
+        moyenne_x /= 100
+        moyenne_y /= 100
         return (moyenne_x, moyenne_y)
 
     def ecart_type(list):
@@ -267,18 +273,19 @@ def stats():
             somme_ecart_carree_y += (y - moyenne_list[1])**2
         ecart_type_x = math.sqrt(somme_ecart_carree_x / len(list))
         ecart_type_y = math.sqrt(somme_ecart_carree_y / len(list))
-        ecart_type_x=int(ecart_type_x*1000)
-        ecart_type_y=int(ecart_type_y*100)
-        ecart_type_x/=1000
-        ecart_type_y/=1000
+        ecart_type_x = int(ecart_type_x*1000)
+        ecart_type_y = int(ecart_type_y*100)
+        ecart_type_x /= 1000
+        ecart_type_y /= 1000
         return (ecart_type_x, ecart_type_y)
 
-    def score(moyenne_score,ecart_type_score,list,number):
-        distance=math.sqrt((moyenne_score[0]-50)**2+(moyenne_score[1]-50)**2)
-        score_fleche=1000/(10*distance+(ecart_type_score[0]*ecart_type_score[1]))
-        score_fleche=int(score_fleche*1000)
-        score_final=score_fleche/1000
-        list.append((number,score_final))
+    def score(moyenne_score, ecart_type_score, list, number):
+        distance = math.sqrt((moyenne_score[0]-50)**2+(moyenne_score[1]-50)**2)
+        score_fleche = 1000 / \
+            (10*distance+(ecart_type_score[0]*ecart_type_score[1]))
+        score_fleche = int(score_fleche*1000)
+        score_final = score_fleche/1000
+        list.append((number, score_final))
         return (score_final)
 
     stats_frame = ttk.Frame(window)
@@ -286,8 +293,9 @@ def stats():
 
     for i in range(len(arrows_coordinates)):
         moyenne_fleche = moyenne(arrows_coordinates[i])
-        ecart_type_fleche=ecart_type(arrows_coordinates[i])
-        arrows_classement.append([score(moyenne_fleche,ecart_type_fleche,score_list,i+1),i,moyenne_fleche,ecart_type_fleche])
+        ecart_type_fleche = ecart_type(arrows_coordinates[i])
+        arrows_classement.append([score(
+            moyenne_fleche, ecart_type_fleche, score_list, i+1), i, moyenne_fleche, ecart_type_fleche])
     arrows_classement.sort()
     arrows_classement.reverse()
 
@@ -299,13 +307,13 @@ def stats():
     arrow_number_label = tk.Label(
         menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
     arrow_number_label.grid(row=0, column=0)
-    
+
     table_container = ttk.Frame(stats_frame)
     table_container.pack()
 
-    scroll_bar_score=ttk.Scrollbar(table_container, orient='vertical')
-    scroll_bar_score.pack(side='right',fill='y')
-    can2=tk.Canvas(
+    scroll_bar_score = ttk.Scrollbar(table_container, orient='vertical')
+    scroll_bar_score.pack(side='right', fill='y')
+    can2 = tk.Canvas(
         table_container,
         width=800,
         height=(len(arrows_classement) + 1)*30,
@@ -313,35 +321,39 @@ def stats():
         scrollregion='0 0 800 ' + str((len(arrows_classement) + 1)*30))
     can2.pack()
     scroll_bar_score.config(command=can2.yview)
-    
-    can2.create_text(250,15,text="Flèche n°")
-    can2.create_text(400,15,text="Moyenne :")
-    can2.create_text(550,15,text="Ecart-type :")
-    can2.create_text(700,15,text="Score :")
-    can2.create_text(100,15,text="Classement :")
+
+    can2.create_text(250, 15, text="Flèche n°")
+    can2.create_text(400, 15, text="Moyenne :")
+    can2.create_text(550, 15, text="Ecart-type :")
+    can2.create_text(700, 15, text="Score :")
+    can2.create_text(100, 15, text="Classement :")
 
     arrow_y = 3
 
     for i in range(len(arrows_classement)):
-        can2.create_text(250,15*arrow_y,text="n°" + str(arrows_classement[i][1]+1))
-        can2.create_text(400,15*arrow_y,text="x : " + str(arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
-        can2.create_text(550,15*arrow_y,text="x : " + str(arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
-        can2.create_text(700,15*arrow_y,text=str(arrows_classement[i][0]))
-        can2.create_text(100,15*arrow_y,text="#"+str(i+1))
+        can2.create_text(250, 15*arrow_y, text="n°" +
+                         str(arrows_classement[i][1]+1))
+        can2.create_text(400, 15*arrow_y, text="x : " + str(
+            arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
+        can2.create_text(550, 15*arrow_y, text="x : " + str(
+            arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
+        can2.create_text(700, 15*arrow_y, text=str(arrows_classement[i][0]))
+        can2.create_text(100, 15*arrow_y, text="#"+str(i+1))
         arrow_y += 2
-    
+
     def plots(list):
-        plots_score=[]
-        plots_fleche=[]
+        plots_score = []
+        plots_fleche = []
         for i in range(len(list)):
             plots_fleche.append(list[i][1]+1)
             plots_score.append(list[i][0])
         fig, axes = plt.subplots()
-        axes.bar(x = plots_fleche, height = plots_score)
+        axes.bar(x=plots_fleche, height=plots_score)
         plt.ylabel('Score')
         plt.xlabel('Numéro de flèche')
         plt.show()
-    graph_button = tk.Button(menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
+    graph_button = tk.Button(
+        menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
     graph_button.grid(row=0, column=1, padx=40, pady=10)
 
 
