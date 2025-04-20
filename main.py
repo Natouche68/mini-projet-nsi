@@ -123,6 +123,9 @@ def overview():
         overview_frame.destroy()
         stats()
 
+    def on_scroll(event):
+        target_canvas.yview_scroll(int(-event.delta / 120), "units")
+
     overview_frame = ttk.Frame(window)
     overview_frame.pack(fill="both")
 
@@ -154,6 +157,8 @@ def overview():
     target_canvas.pack()
     scroll_bar.config(command=target_canvas.yview)
     target_canvas.yview_moveto(overview_scroll_position)
+    target_canvas.bind_all("<MouseWheel>", on_scroll)
+
     for i in range(arrow_number.get()):
         small_target(i)
     target_canvas.bind("<Button-1>", lambda event: on_target_click(event,
@@ -289,6 +294,9 @@ def stats():
         list.append((number, score_final))
         return (score_final)
 
+    def on_scroll(event):
+        can2.yview_scroll(int(-event.delta / 120), "units")
+
     stats_frame = ttk.Frame(window)
     stats_frame.pack(fill='both')
 
@@ -321,6 +329,7 @@ def stats():
         yscrollcommand=scroll_bar_score.set,
         scrollregion='0 0 800 ' + str((len(arrows_classement) + 1)*30))
     can2.pack()
+    can2.bind_all("<MouseWheel>", on_scroll)
     scroll_bar_score.config(command=can2.yview)
 
     can2.create_text(250, 15, text="Flèche n°")
