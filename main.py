@@ -332,23 +332,24 @@ def stats():
     can2.bind_all("<MouseWheel>", on_scroll)
     scroll_bar_score.config(command=can2.yview)
 
-    can2.create_text(250, 15, text="Flèche n°")
+    can2.create_text(100, 15, text="Classement :")
+    can2.create_text(250, 15, text="Flèche n°", font=("Segoe UI", 10, "bold"))
     can2.create_text(400, 15, text="Moyenne :")
     can2.create_text(550, 15, text="Ecart-type :")
-    can2.create_text(700, 15, text="Score :")
-    can2.create_text(100, 15, text="Classement :")
+    can2.create_text(700, 15, text="Score :", font=("Segoe UI", 10, "bold"))
 
     arrow_y = 3
 
     for i in range(len(arrows_classement)):
+        can2.create_text(100, 15*arrow_y, text="#"+str(i+1))
         can2.create_text(250, 15*arrow_y, text="n°" +
-                         str(arrows_classement[i][1]+1))
+                         str(arrows_classement[i][1]+1), font=("Segoe UI", 10, "bold"))
         can2.create_text(400, 15*arrow_y, text="x : " + str(
             arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
         can2.create_text(550, 15*arrow_y, text="x : " + str(
             arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
-        can2.create_text(700, 15*arrow_y, text=str(arrows_classement[i][0]))
-        can2.create_text(100, 15*arrow_y, text="#"+str(i+1))
+        can2.create_text(
+            700, 15*arrow_y, text=str(arrows_classement[i][0]), font=("Segoe UI", 10, "bold"))
         arrow_y += 2
 
     def plots(list):
