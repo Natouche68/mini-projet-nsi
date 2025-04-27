@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import math
+import json
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
@@ -10,6 +11,7 @@ window.geometry("800x500")
 window.minsize(800, 500)
 window.maxsize(800, 500)
 
+name = tk.StringVar(value="")
 arrow_number = tk.IntVar(value=9)
 is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
@@ -21,6 +23,9 @@ window.wm_attributes("-transparentcolor", "orange")
 
 def home():
     def start():
+        if arrow_number.get() <= 0 or name.get() == "":
+            return
+
         for _ in range(arrow_number.get()):
             arrows_coordinates.append([])
         home_frame.destroy()
@@ -36,6 +41,11 @@ def home():
     title_label = ttk.Label(
         home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
     title_label.pack(padx=10, pady=5)
+
+    name_label = ttk.Label(home_frame, text="Nom du tri :")
+    name_label.pack()
+    name_entry = ttk.Entry(home_frame, textvariable=name)
+    name_entry.pack(pady=(5, 0))
 
     arrow_number_label = ttk.Label(home_frame, text="Nombre de flèches :")
     arrow_number_label.pack()
@@ -134,13 +144,17 @@ def overview():
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
     menu_bar_content.pack()
 
+    name_label = tk.Label(menu_bar_content, text=name.get(),
+                          bg="#3ED8FF", font=("Segoe UI", 10, "bold"))
+    name_label.grid(row=0, column=0, padx=40, pady=10)
+
     arrow_number_label = tk.Label(
         menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
-    arrow_number_label.grid(row=0, column=0)
+    arrow_number_label.grid(row=0, column=1)
 
     current_volley_label = tk.Label(
         menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
-    current_volley_label.grid(row=0, column=1, padx=40, pady=10)
+    current_volley_label.grid(row=0, column=2, padx=40)
 
     target_frame_container = tk.Frame(overview_frame)
     target_frame_container.pack(fill="both")
@@ -166,7 +180,7 @@ def overview():
 
     finish_button = tk.Button(menu_bar_content, text="Terminer", command=on_finish_click,
                               state="normal" if is_finish_button_active() else "disabled")
-    finish_button.grid(row=0, column=2)
+    finish_button.grid(row=0, column=3)
 
 
 def add_impact(target_number):
@@ -233,17 +247,21 @@ def add_impact(target_number):
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
     menu_bar_content.pack()
 
+    name_label = tk.Label(menu_bar_content, text=name.get(),
+                          bg="#3ED8FF", font=("Segoe UI", 10, "bold"))
+    name_label.grid(row=0, column=0, padx=40, pady=10)
+
     arrow_number_label = tk.Label(
         menu_bar_content, text="Flèche n° : " + str(target_number + 1), bg="#3ED8FF")
-    arrow_number_label.grid(row=0, column=0)
+    arrow_number_label.grid(row=0, column=1)
 
     current_volley_label = tk.Label(
         menu_bar_content, text="Volée n°" + str(current_volley), bg="#3ED8FF")
-    current_volley_label.grid(row=0, column=1, padx=40, pady=10)
+    current_volley_label.grid(row=0, column=2, padx=40)
 
     finish_button = tk.Button(
         menu_bar_content, text="Valider", command=on_button_click, state="disabled")
-    finish_button.grid(row=0, column=2)
+    finish_button.grid(row=0, column=3)
 
     canvas = tk.Canvas(arrow_frame, width=460, height=460)
     canvas.pack()
@@ -313,9 +331,13 @@ def stats():
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
     menu_bar_content.pack()
 
+    name_label = tk.Label(menu_bar_content, text=name.get(),
+                          bg="#3ED8FF", font=("Segoe UI", 10, "bold"))
+    name_label.grid(row=0, column=0, padx=40, pady=10)
+
     arrow_number_label = tk.Label(
         menu_bar_content, text="Nombre de flèches : " + str(arrow_number.get()), bg="#3ED8FF")
-    arrow_number_label.grid(row=0, column=0)
+    arrow_number_label.grid(row=0, column=1)
 
     table_container = ttk.Frame(stats_frame)
     table_container.pack()
@@ -367,7 +389,7 @@ def stats():
         plt.show()
     graph_button = tk.Button(
         menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
-    graph_button.grid(row=0, column=1, padx=40, pady=10)
+    graph_button.grid(row=0, column=2, padx=40, pady=10)
 
 
 home()
