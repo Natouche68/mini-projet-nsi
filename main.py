@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import math
 import json
+import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
@@ -17,7 +18,7 @@ is_trispot = tk.BooleanVar(value=False)
 arrows_coordinates = []
 current_volley = 1
 overview_scroll_position = 0
-arc = tk.PhotoImage(file='arc_accueil.png')
+arc_img = tk.PhotoImage(file='arc_accueil.png')
 window.wm_attributes("-transparentcolor", "orange")
 
 
@@ -29,14 +30,27 @@ def home():
         for _ in range(arrow_number.get()):
             arrows_coordinates.append([])
         home_frame.destroy()
-        can1.destroy()
+        can.destroy()
         overview()
 
-    can1 = tk.Canvas(window, width=800, height=500)
-    can1.create_image(400, 250, image=arc)
-    can1.place(x=0, y=0)
+    def load_file(file_name):
+        global arrows_coordinates
+
+        with open("data/" + str(file_name) + ".json", "r") as file:
+            arrows_coordinates = json.load(file)
+            name.set(file_name)
+            arrow_number.set(len(arrows_coordinates))
+
+            home_frame.destroy()
+            can.destroy()
+            stats()
+
+    # Home menu
+    can = tk.Canvas(window, width=800, height=500)
+    can.create_image(400, 250, image=arc_img)
+    can.place(x=0, y=0)
     home_frame = ttk.Frame(window)
-    home_frame.pack(pady=(10, 0))
+    home_frame.pack(pady=10)
 
     title_label = ttk.Label(
         home_frame, text="Trieur de flèches", font=("Segoe UI", 32))
@@ -59,6 +73,20 @@ def home():
 
     validate_button = ttk.Button(home_frame, text="Commencer", command=start)
     validate_button.pack(pady=(0, 10))
+
+    # Get existing data
+    files = [file.replace(".json", "")
+             for file in os.listdir("data/") if ".json" in file]
+
+    # Menu for loading data
+    load_title = ttk.Label(
+        home_frame, text="Ouvrir un tri précédent", font=("Segoe UI", 16))
+    load_title.pack(pady=10)
+
+    for file in files:
+        load_button = ttk.Button(
+            home_frame, text=file, command=lambda f=file: load_file(f))
+        load_button.pack(fill="x", padx=10, pady=4)
 
 
 def overview():
