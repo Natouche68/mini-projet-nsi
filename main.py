@@ -391,6 +391,10 @@ def stats():
         menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
     graph_button.grid(row=0, column=2, padx=40, pady=10)
 
+    # Save to disk
+    with open("data/" + str(name.get()) + ".json", "w") as file:
+        file.write(json.dumps(arrows_coordinates))
+
 
 home()
 window.mainloop()
