@@ -23,6 +23,8 @@ window.wm_attributes("-transparentcolor", "orange")
 
 
 def home():
+    # On validate_buttin click
+    # Start a new session
     def start():
         if arrow_number.get() <= 0 or name.get() == "":
             return
@@ -33,6 +35,8 @@ def home():
         can.destroy()
         overview()
 
+    # On load_button click
+    # Load the stats from a data/*.json file
     def load_file(file_name):
         global arrows_coordinates
 
@@ -90,9 +94,11 @@ def home():
 
 
 def overview():
+    # Check if an impact has been set for a given arrow during the current volley
     def is_target_complete(target_number):
         return len(arrows_coordinates[target_number]) == current_volley
 
+    # Open the "add impact" menu for a given arrow
     def open_target(target_number):
         global overview_scroll_position
 
@@ -101,11 +107,14 @@ def overview():
             overview_frame.destroy()
             add_impact(target_number)
 
+    # On target_canvas click
+    # Get the number of the arrow corresponding to the click 
     def on_target_click(event, scroll_bar_offset):
         target_number = int(
             ((event.y + scroll_bar_offset) // 120) * 3 + (event.x // 120))
         open_target(target_number)
 
+    # Draw a small arrow that can be clicked
     def small_target(target_number):
         xPos = (target_number % 3) * 120 + 10
         yPos = (target_number // 3) * 120 + 10
@@ -146,6 +155,8 @@ def overview():
             target_canvas.create_text(
                 xPos+50, yPos+49, text=str(target_number+1), font=("Segoe UI", 16))
 
+    # Check if the finish_button can be clicked
+    # (if the current volley is completed and if at least one has been set) 
     def is_finish_button_active():
         coordinates_length = len(arrows_coordinates[0])
         for arrow in arrows_coordinates:
@@ -155,12 +166,14 @@ def overview():
             return False
         return True
 
+    # Show the stats menu
     def on_finish_click():
         if not is_finish_button_active():
             return
         overview_frame.destroy()
         stats()
 
+    # Enables the user to scroll using the mouse wheel
     def on_scroll(event):
         target_canvas.yview_scroll(int(-event.delta / 120), "units")
 
@@ -215,6 +228,7 @@ def add_impact(target_number):
     global impact_to_add
     impact_to_add = [None, None]
 
+    # Update the impact_to_add according to the click
     def on_target_click(event):
         global impact_to_add
         impact_to_add = [(event.x-30)/4, (event.y-30)/4]
@@ -223,7 +237,8 @@ def add_impact(target_number):
                            * 4+35, impact_to_add[1]*4+35, fill="#00C700", outline="#00C700")
         finish_button.config(state="normal")
 
-    def on_button_click():
+    # Go back to the overview page and add the impact to the list
+    def on_finish_button_click():
         global current_volley, impact_to_add
 
         if impact_to_add != [None, None]:
@@ -240,6 +255,7 @@ def add_impact(target_number):
             arrow_frame.destroy()
             overview()
 
+    # Draw a target that can be clicked
     def draw_target():
         canvas.delete("all")
 
@@ -288,7 +304,7 @@ def add_impact(target_number):
     current_volley_label.grid(row=0, column=2, padx=40)
 
     finish_button = tk.Button(
-        menu_bar_content, text="Valider", command=on_button_click, state="disabled")
+        menu_bar_content, text="Valider", command=on_finish_button_click, state="disabled")
     finish_button.grid(row=0, column=3)
 
     canvas = tk.Canvas(arrow_frame, width=460, height=460)
