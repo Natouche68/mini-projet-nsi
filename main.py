@@ -318,6 +318,7 @@ def stats():
     arrows_classement = []
     score_list = []
 
+    # Calculates the average value of the impacts of a given arrow
     def moyenne(list):
         somme_x = 0
         somme_y = 0
@@ -332,6 +333,7 @@ def stats():
         moyenne_y /= 100
         return (moyenne_x, moyenne_y)
 
+    # Calculates the standart deviation value of the impacts of a given arrow
     def ecart_type(list):
         moyenne_list = moyenne(list)
         somme_ecart_carree_x = 0
@@ -347,6 +349,7 @@ def stats():
         ecart_type_y /= 1000
         return (ecart_type_x, ecart_type_y)
 
+    # Calculates the regularity score of a given arrow
     def score(moyenne_score, ecart_type_score, list, number):
         distance = math.sqrt((moyenne_score[0]-50)**2+(moyenne_score[1]-50)**2)
         score_fleche = 1000 / \
@@ -356,6 +359,7 @@ def stats():
         list.append((number, score_final))
         return (score_final)
 
+    # Enables the user to scroll using the mouse wheel
     def on_scroll(event):
         can2.yview_scroll(int(-event.delta / 120), "units")
 
@@ -418,6 +422,7 @@ def stats():
             700, 15*arrow_y, text=str(arrows_classement[i][0]), font=("Segoe UI", 10, "bold"))
         arrow_y += 2
 
+    # Create the Matplotlib plot and show it
     def plots(list):
         plots_score = []
         plots_fleche = []
