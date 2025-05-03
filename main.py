@@ -48,6 +48,16 @@ def home():
             home_frame.destroy()
             can.destroy()
             stats()
+    
+    # On delete_button click
+    # Delete the given file
+    def delete_file(file_name):
+        os.remove("data/" + str(file_name) + ".json")
+
+        # Re-render the home page
+        home_frame.destroy()
+        can.destroy()
+        home()
 
     # Home menu
     can = tk.Canvas(window, width=800, height=500)
@@ -87,10 +97,16 @@ def home():
         home_frame, text="Ouvrir un tri précédent", font=("Segoe UI", 16))
     load_title.pack(pady=10)
 
-    for file in files:
+    load_buttons = ttk.Frame(home_frame)
+    load_buttons.pack(pady=4)
+
+    for i in range(len(files)):
         load_button = ttk.Button(
-            home_frame, text=file, command=lambda f=file: load_file(f))
-        load_button.pack(fill="x", padx=10, pady=4)
+            load_buttons, text=files[i], command=lambda f=files[i]: load_file(f), width=32)
+        load_button.grid(row=i, column=0)
+
+        delete_button = ttk.Button(load_buttons, text="❌", command=lambda f=files[i]: delete_file(f), width=4)
+        delete_button.grid(row=i, column=1)
 
 
 def overview():
