@@ -346,7 +346,7 @@ def add_impact(target_number):
 
 
 def stats():
-    arrows_classement = []
+    arrows_coordinates_sorted = []
     score_list = []
 
     # Calculates the average value of the impacts of a given arrow
@@ -390,6 +390,17 @@ def stats():
         list.append((number, score_final))
         return (score_final)
 
+    # Sort the scores in *descending* order
+    def sort(coordinates_to_sort):
+        n = len(coordinates_to_sort)
+        for i in range(n):
+            k = i
+            for j in range(i+1, n):
+                if coordinates_to_sort[k]["score"] < coordinates_to_sort[j]["score"]:
+                    k = j
+            coordinates_to_sort[k], coordinates_to_sort[i] = coordinates_to_sort[i], coordinates_to_sort[k]
+        return coordinates_to_sort
+
     # Enables the user to scroll using the mouse wheel
     def on_scroll(event):
         can2.yview_scroll(int(-event.delta / 120), "units")
@@ -400,10 +411,13 @@ def stats():
     for i in range(len(arrows_coordinates)):
         moyenne_fleche = moyenne(arrows_coordinates[i])
         ecart_type_fleche = ecart_type(arrows_coordinates[i])
-        arrows_classement.append([score(
-            moyenne_fleche, ecart_type_fleche, score_list, i+1), i, moyenne_fleche, ecart_type_fleche])
-    arrows_classement.sort()
-    arrows_classement.reverse()
+        arrows_coordinates_sorted.append({
+            "index": i,
+            "score":score(moyenne_fleche, ecart_type_fleche, score_list, i+1),
+            "moyenne": moyenne_fleche,
+            "ecart-type": ecart_type_fleche
+        })
+    arrows_coordinates_sorted = sort(arrows_coordinates_sorted)
 
     menu_bar = tk.Frame(stats_frame, bg="#3ED8FF")
     menu_bar.pack(fill="x")
@@ -426,9 +440,9 @@ def stats():
     can2 = tk.Canvas(
         table_container,
         width=800,
-        height=(len(arrows_classement) + 1)*30,
+        height=(len(arrows_coordinates_sorted) + 1)*30,
         yscrollcommand=scroll_bar_score.set,
-        scrollregion='0 0 800 ' + str((len(arrows_classement) + 1)*30))
+        scrollregion='0 0 800 ' + str((len(arrows_coordinates_sorted) + 1)*30))
     can2.pack()
     can2.bind_all("<MouseWheel>", on_scroll)
     scroll_bar_score.config(command=can2.yview)
@@ -441,25 +455,25 @@ def stats():
 
     arrow_y = 3
 
-    for i in range(len(arrows_classement)):
+    for i in range(len(arrows_coordinates_sorted)):
         can2.create_text(100, 15*arrow_y, text="#"+str(i+1))
         can2.create_text(250, 15*arrow_y, text="n°" +
-                         str(arrows_classement[i][1]+1), font=("Segoe UI", 10, "bold"))
+                         str(arrows_coordinates_sorted[i]["index"]+1), font=("Segoe UI", 10, "bold"))
         can2.create_text(400, 15*arrow_y, text="x : " + str(
-            arrows_classement[i][2][0]) + "   y : " + str(arrows_classement[i][2][1]))
+            arrows_coordinates_sorted[i]["moyenne"][0]) + "   y : " + str(arrows_coordinates_sorted[i]["moyenne"][1]))
         can2.create_text(550, 15*arrow_y, text="x : " + str(
-            arrows_classement[i][3][0]) + "   y : " + str(arrows_classement[i][3][1]))
+            arrows_coordinates_sorted[i]["ecart-type"][0]) + "   y : " + str(arrows_coordinates_sorted[i]["ecart-type"][1]))
         can2.create_text(
-            700, 15*arrow_y, text=str(arrows_classement[i][0]), font=("Segoe UI", 10, "bold"))
+            700, 15*arrow_y, text=str(arrows_coordinates_sorted[i]["score"]), font=("Segoe UI", 10, "bold"))
         arrow_y += 2
 
     # Create the Matplotlib plot and show it
     def plots(list):
-        plots_score = []
         plots_fleche = []
+        plots_score = []
         for i in range(len(list)):
-            plots_fleche.append(list[i][1]+1)
-            plots_score.append(list[i][0])
+            plots_fleche.append(list[i]["index"]+1)
+            plots_score.append(list[i]["score"])
         _, axes = plt.subplots()
         axes.bar(x=plots_fleche, height=plots_score)
         axes.xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -468,7 +482,7 @@ def stats():
         plt.xlabel("Numéro de flèche")
         plt.show()
     graph_button = tk.Button(
-        menu_bar_content, text="Graphique", command=lambda: plots(arrows_classement))
+        menu_bar_content, text="Graphique", command=lambda: plots(arrows_coordinates_sorted))
     graph_button.grid(row=0, column=2, padx=40, pady=10)
 
     # Save to disk
