@@ -5,6 +5,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+import random as rdm
 
 window = tk.Tk()
 window.title("Mini-projet NSI")
@@ -239,6 +240,20 @@ def overview():
                               state="normal" if is_finish_button_active() else "disabled")
     finish_button.grid(row=0, column=3)
 
+    # Autofill 2 volleys for each arrow (for testing purposes)
+    def autofill():
+        global arrows_coordinates
+        global arrow_number
+        for i in range(arrow_number.get()):
+            list1=[rdm.randint(0,100),rdm.randint(0,100)]
+            list2=[rdm.randint(0,100),rdm.randint(0,100)]
+            arrows_coordinates[i].append(list1)
+            arrows_coordinates[i].append(list2)
+        stats()
+        overview_frame.destroy()
+
+    autofill_button = tk.Button(menu_bar_content, text='Rempli. aléat.', bg='#3ED8FF', command=lambda : autofill())
+    autofill_button.grid(row=0,column=4,padx=40)
 
 def add_impact(target_number):
     global impact_to_add
@@ -349,7 +364,7 @@ def stats():
         moyenne_y /= 100
         return (moyenne_x, moyenne_y)
 
-    # Calculates the standart deviation value of the impacts of a given arrow
+    # Calculates the standard deviation value of the impacts of a given arrow
     def ecart_type(list):
         moyenne_list = moyenne(list)
         somme_ecart_carree_x = 0
