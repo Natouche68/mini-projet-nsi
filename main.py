@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import math
 import json
 import os
@@ -61,12 +62,13 @@ def home():
     # On delete_button click
     # Delete the given file
     def delete_file(file_name):
-        os.remove("data/" + str(file_name) + ".json")
+        if messagebox.askokcancel(title="Supprimer un tri", message="Etes-vous sûr(e) de vouloir supprimer le tri " + str(file_name) + " ?"):
+            os.remove("data/" + str(file_name) + ".json")
 
-        # Re-render the home page
-        home_frame.destroy()
-        can.destroy()
-        home()
+            # Re-render the home page
+            home_frame.destroy()
+            can.destroy()
+            home()
 
     # Home menu
     can = tk.Canvas(window, width=800, height=500)
