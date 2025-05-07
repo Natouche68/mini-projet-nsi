@@ -23,6 +23,15 @@ arc_img = tk.PhotoImage(file='arc_accueil.png')
 
 
 def home():
+    global arrows_coordinates, current_volley, overview_scroll_position
+
+    # Init base values to avoid conflicts
+    name.set("")
+    arrow_number.set(9)
+    arrows_coordinates = []
+    current_volley = 1
+    overview_scroll_position = 0
+
     # On validate_buttin click
     # Start a new session
     def start():
@@ -423,8 +432,7 @@ def stats():
     menu_bar_content = tk.Frame(menu_bar, bg="#3ED8FF")
     menu_bar_content.pack()
 
-    name_label = tk.Label(menu_bar_content, text=name.get(),
-                          bg="#3ED8FF", font=("Segoe UI", 10, "bold"))
+    name_label = tk.Label(menu_bar_content, text=name.get(), bg="#3ED8FF", font=("Segoe UI", 10, "bold"))
     name_label.grid(row=0, column=0, padx=40, pady=10)
 
     arrow_number_label = tk.Label(
@@ -487,6 +495,14 @@ def stats():
     # Save to disk
     with open("data/" + str(name.get()) + ".json", "w") as file:
         file.write(json.dumps(arrows_coordinates))
+    
+    # Button to go back to the home page
+    def go_home():
+        stats_frame.destroy()
+        home()
+
+    go_home_button = tk.Button(menu_bar_content, text="Accueil", command=go_home)
+    go_home_button.grid(row=0, column=3)
 
 
 home()
