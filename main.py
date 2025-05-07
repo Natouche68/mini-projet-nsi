@@ -262,7 +262,7 @@ def overview():
         stats()
         overview_frame.destroy()
 
-    autofill_button = tk.Button(menu_bar_content, text='Rempli. aléat.', bg='#3ED8FF', command=lambda : autofill())
+    autofill_button = tk.Button(menu_bar_content, text='Rempli. aléat.', bg='#FFFFA0', command=lambda : autofill())
     autofill_button.grid(row=0,column=4,padx=40)
 
 def add_impact(target_number):
