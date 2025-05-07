@@ -20,7 +20,6 @@ arrows_coordinates = []
 current_volley = 1
 overview_scroll_position = 0
 arc_img = tk.PhotoImage(file='arc_accueil.png')
-window.wm_attributes("-transparentcolor", "orange")
 
 
 def home():
